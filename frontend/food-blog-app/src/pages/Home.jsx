@@ -3,6 +3,7 @@ import foodRecipe3 from '../assets/foodRecipe3.jpg';
 import RecipeItems from '../components/RecipeItems';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE from '../api';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function Home() {
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/recipe/");
+                const res = await axios.get(`${API_BASE}/recipe/`);
                 setRecipes(res.data);
             } catch (err) {
                 console.error(err);

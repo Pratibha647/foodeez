@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import API_BASE from "../api";
 
 export default function AddFoodRecipe() {
     const navigate = useNavigate();
@@ -10,7 +11,6 @@ export default function AddFoodRecipe() {
 
     const token = localStorage.getItem("token");
 
-    // Redirect if not logged in
     useEffect(() => {
         if (!token) {
             navigate("/");
@@ -33,7 +33,7 @@ export default function AddFoodRecipe() {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post("http://localhost:5000/recipe", recipeData, {
+            await axios.post(`${API_BASE}/recipe`, recipeData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             showToast("Recipe added successfully! 🎉");

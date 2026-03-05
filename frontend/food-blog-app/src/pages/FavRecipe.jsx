@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import RecipeItems from '../components/RecipeItems'
+import API_BASE from '../api'
 
 export default function FavRecipe() {
     const [recipes, setRecipes] = useState([]);
@@ -19,7 +20,7 @@ export default function FavRecipe() {
                 return;
             }
             try {
-                const res = await axios.get("http://localhost:5000/recipe/");
+                const res = await axios.get(`${API_BASE}/recipe/`);
                 const favRecipes = res.data.filter(r => favIds.includes(r._id));
                 setRecipes(favRecipes);
             } catch (err) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import RecipeItems from '../components/RecipeItems'
+import API_BASE from '../api'
 
 export default function MyRecipe() {
     const [recipes, setRecipes] = useState([]);
@@ -10,7 +11,7 @@ export default function MyRecipe() {
     useEffect(() => {
         const fetchMyRecipes = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/recipe/");
+                const res = await axios.get(`${API_BASE}/recipe/`);
                 const myRecipes = res.data.filter(r => r.userID === userId);
                 setRecipes(myRecipes);
             } catch (err) {

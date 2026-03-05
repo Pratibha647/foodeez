@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from "axios";
+import API_BASE from "../api";
 
 export default function InputForm({ onSuccess }) {
     const [email, setEmail] = useState("");
@@ -14,12 +15,10 @@ export default function InputForm({ onSuccess }) {
         setLoading(true);
         const endpoint = isSignUp ? "signup" : "login";
         try {
-            const res = await axios.post(`http://localhost:5000/${endpoint}`, { email, password });
-            // Consistent keys for token storage
+            const res = await axios.post(`${API_BASE}/${endpoint}`, { email, password });
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
             localStorage.setItem("userId", res.data.user._id);
-            // Notify Navbar that auth state changed
             window.dispatchEvent(new Event("authChange"));
             onSuccess();
         } catch (err) {

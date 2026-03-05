@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import API_BASE from "../api";
 
 export default function EditRecipe() {
     const { id } = useParams();
@@ -15,7 +16,7 @@ export default function EditRecipe() {
         if (!token) { navigate("/"); return; }
         const fetchRecipe = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/recipe/${id}`);
+                const res = await axios.get(`${API_BASE}/recipe/${id}`);
                 setRecipeData({
                     ...res.data,
                     ingridents: Array.isArray(res.data.ingridents)
@@ -50,7 +51,7 @@ export default function EditRecipe() {
                 : recipeData.ingridents
         };
         try {
-            await axios.put(`http://localhost:5000/recipe/${id}`, payload, {
+            await axios.put(`${API_BASE}/recipe/${id}`, payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             showToast("Recipe updated successfully! ✅");
@@ -75,57 +76,29 @@ export default function EditRecipe() {
                 <form className="form" onSubmit={onHandleSubmit}>
                     <div className='form-control'>
                         <label>Recipe Title *</label>
-                        <input
-                            type="text"
-                            className='input'
-                            name="title"
-                            value={recipeData.title || ""}
-                            onChange={onChangeHandler}
-                            required
-                        />
+                        <input type="text" className='input' name="title"
+                            value={recipeData.title || ""} onChange={onChangeHandler} required />
                     </div>
                     <div className='form-control'>
                         <label>Cooking Time</label>
-                        <input
-                            type="text"
-                            className='input'
-                            name="time"
-                            value={recipeData.time || ""}
-                            onChange={onChangeHandler}
-                        />
+                        <input type="text" className='input' name="time"
+                            value={recipeData.time || ""} onChange={onChangeHandler} />
                     </div>
                     <div className='form-control'>
                         <label>Ingredients *</label>
-                        <textarea
-                            className='input-textarea'
-                            name="ingridents"
-                            rows="5"
-                            value={recipeData.ingridents || ""}
-                            onChange={onChangeHandler}
-                            required
-                        ></textarea>
+                        <textarea className='input-textarea' name="ingridents" rows="5"
+                            value={recipeData.ingridents || ""} onChange={onChangeHandler} required></textarea>
                         <span className="hint">Separate each ingredient with a comma</span>
                     </div>
                     <div className='form-control'>
                         <label>Instructions *</label>
-                        <textarea
-                            className='input-textarea'
-                            name="instructions"
-                            rows="6"
-                            value={recipeData.instructions || ""}
-                            onChange={onChangeHandler}
-                            required
-                        ></textarea>
+                        <textarea className='input-textarea' name="instructions" rows="6"
+                            value={recipeData.instructions || ""} onChange={onChangeHandler} required></textarea>
                     </div>
                     <div className='form-control'>
                         <label>Cover Image URL</label>
-                        <input
-                            type="url"
-                            className='input'
-                            name="coverImage"
-                            value={recipeData.coverImage || ""}
-                            onChange={onChangeHandler}
-                        />
+                        <input type="url" className='input' name="coverImage"
+                            value={recipeData.coverImage || ""} onChange={onChangeHandler} />
                     </div>
                     <button type='submit' className='submit-btn' disabled={saving}>
                         {saving ? "Saving..." : "Save Changes"}

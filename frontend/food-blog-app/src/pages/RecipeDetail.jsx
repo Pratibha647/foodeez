@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BsStopwatch, BsPencil, BsTrash, BsArrowLeft } from "react-icons/bs";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import defaultFoodImg from '../assets/foodRecipe1.avif';
+import API_BASE from '../api';
 
 export default function RecipeDetail() {
     const { id } = useParams();
@@ -26,7 +27,7 @@ export default function RecipeDetail() {
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/recipe/${id}`);
+                const res = await axios.get(`${API_BASE}/recipe/${id}`);
                 setRecipe(res.data);
             } catch (err) {
                 setError("Recipe not found.");
@@ -46,7 +47,7 @@ export default function RecipeDetail() {
         if (!window.confirm("Are you sure you want to delete this recipe?")) return;
         setDeleting(true);
         try {
-            await axios.delete(`http://localhost:5000/recipe/${id}`, {
+            await axios.delete(`${API_BASE}/recipe/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             showToast("Recipe deleted!");
@@ -126,17 +127,10 @@ export default function RecipeDetail() {
 
                     {isOwner && (
                         <div className="detail-actions">
-                            <button
-                                className="btn-edit"
-                                onClick={() => navigate(`/editRecipe/${id}`)}
-                            >
+                            <button className="btn-edit" onClick={() => navigate(`/editRecipe/${id}`)}>
                                 <BsPencil /> Edit
                             </button>
-                            <button
-                                className="btn-delete"
-                                onClick={handleDelete}
-                                disabled={deleting}
-                            >
+                            <button className="btn-delete" onClick={handleDelete} disabled={deleting}>
                                 <BsTrash /> {deleting ? "Deleting..." : "Delete"}
                             </button>
                         </div>
@@ -170,9 +164,7 @@ export default function RecipeDetail() {
                 </div>
             </div>
 
-            {toast && (
-                <div className={`toast ${toast.type}`}>{toast.msg}</div>
-            )}
+            {toast && <div className={`toast ${toast.type}`}>{toast.msg}</div>}
         </>
     );
 }
