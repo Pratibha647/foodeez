@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BsStopwatch } from "react-icons/bs";
+import { BsStopwatch, BsCartPlus } from "react-icons/bs";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
+import { CartContext } from '../context/CartContext';
 import defaultFoodImg from "../assets/foodRecipe1.avif";
 
 export default function RecipeItems({ recipes = [], showOwnerActions = false, onDelete }) {
     const navigate = useNavigate();
+    const { addToCart } = React.useContext(CartContext);
     const userId = localStorage.getItem("userId");
 
     const getFavourites = () => {
@@ -63,13 +65,23 @@ export default function RecipeItems({ recipes = [], showOwnerActions = false, on
                                     <BsStopwatch />
                                     {item.time || "N/A"}
                                 </div>
-                                <span
-                                    className={`fav-icon ${isFav ? 'active' : 'inactive'}`}
-                                    onClick={(e) => toggleFavourite(e, item._id)}
-                                    title={isFav ? "Remove from favourites" : "Add to favourites"}
-                                >
-                                    {isFav ? <IoMdHeart /> : <IoMdHeartEmpty />}
-                                </span>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <span
+                                        className={`fav-icon ${isFav ? 'active' : 'inactive'}`}
+                                        onClick={(e) => toggleFavourite(e, item._id)}
+                                        title={isFav ? "Remove from favourites" : "Add to favourites"}
+                                    >
+                                        {isFav ? <IoMdHeart /> : <IoMdHeartEmpty />}
+                                    </span>
+                                    <span
+                                        className="fav-icon"
+                                        style={{ color: '#1a7a54' }}
+                                        onClick={(e) => { e.stopPropagation(); addToCart(item); }}
+                                        title="Add to Cart"
+                                    >
+                                        <BsCartPlus />
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>

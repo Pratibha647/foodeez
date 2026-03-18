@@ -69,6 +69,8 @@ export default function EditRecipe() {
         </div>
     );
 
+    if (!recipeData) return null;
+
     return (
         <>
             <div className='container'>

@@ -50,6 +50,9 @@ export default function FavRecipe() {
                     <div className="empty-state">
                         <h3>No favourites yet</h3>
                         <p>Tap the ❤️ on any recipe to save it here</p>
+                        <button className="btn-edit" style={{ marginTop: "1rem", display: 'inline-flex' }} onClick={() => window.location.href = "/"}>
+                            Explore Menu
+                        </button>
                     </div>
                 ) : (
                     <RecipeItems recipes={recipes} />

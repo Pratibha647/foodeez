@@ -17,10 +17,10 @@ app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin (e.g. curl, Postman, mobile apps)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app") || origin.endsWith(".onrender.com")) {
             return callback(null, true);
         }
-        return callback(new Error("Not allowed by CORS"));
+        return callback(new Error("Blocked by CORS policy. Origin not allowed."));
     },
     credentials: true,
 }));
@@ -33,8 +33,24 @@ app.use("/recipe", require("./routes/recipe"));
 // Health check route
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
-// Keep app.listen for local development
-if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+// Handle 404 routes
+app.use((req, res, next) => {
+    res.status(404).json({ success: false, message: "API Route Not Found" });
+});
+
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error(`[Error]: ${err.message}`);
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({
+        success: false,
+        message: err.message || "Internal Server Error",
+        ...(process.env.NODE_ENV !== "production" && { stack: err.stack })
+    });
+});
+
+// Keep app.listen for local development and standard PAAS (like Render)
+if (!process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`App is listening on port ${PORT}`);
     });

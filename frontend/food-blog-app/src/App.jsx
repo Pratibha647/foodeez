@@ -8,6 +8,8 @@ import RecipeDetail from './pages/RecipeDetail';
 import MyRecipe from './pages/MyRecipe';
 import FavRecipe from './pages/FavRecipe';
 import EditRecipe from './pages/EditRecipe';
+import { CartProvider } from './context/CartContext';
+import Cart from './pages/Cart';
 
 const router = createBrowserRouter([
   {
@@ -20,12 +22,15 @@ const router = createBrowserRouter([
       { path: "/editRecipe/:id", element: <EditRecipe /> },
       { path: "/myRecipe", element: <MyRecipe /> },
       { path: "/favRecipe", element: <FavRecipe /> },
+      { path: "/cart", element: <Cart /> },
     ]
   }
 ]);
 
 export default function App() {
   return (
-    <RouterProvider router={router} />
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
   );
 }

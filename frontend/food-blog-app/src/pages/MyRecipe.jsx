@@ -41,6 +41,9 @@ export default function MyRecipe() {
                     <div className="empty-state">
                         <h3>You haven't posted any recipes yet</h3>
                         <p>Share your first recipe with the community!</p>
+                        <button className="btn-edit" style={{ marginTop: "1rem", display: 'inline-flex' }} onClick={() => window.location.href = "/addRecipe"}>
+                            Share Recipe
+                        </button>
                     </div>
                 ) : (
                     <RecipeItems recipes={recipes} showOwnerActions />

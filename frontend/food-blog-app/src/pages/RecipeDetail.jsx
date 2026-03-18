@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import { BsStopwatch, BsPencil, BsTrash, BsArrowLeft } from "react-icons/bs";
+import { BsStopwatch, BsPencil, BsTrash, BsArrowLeft, BsCartPlus } from "react-icons/bs";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
+import { CartContext } from '../context/CartContext';
 import defaultFoodImg from '../assets/foodRecipe1.avif';
 import API_BASE from '../api';
 
@@ -14,6 +15,7 @@ export default function RecipeDetail() {
     const [error, setError] = useState("");
     const [deleting, setDeleting] = useState(false);
     const [toast, setToast] = useState(null);
+    const { addToCart } = React.useContext(CartContext);
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
@@ -88,6 +90,8 @@ export default function RecipeDetail() {
         </div>
     );
 
+    if (!recipe) return null;
+
     const isOwner = userId && recipe?.userID === userId;
     const ingredients = Array.isArray(recipe.ingridents)
         ? recipe.ingridents
@@ -125,16 +129,21 @@ export default function RecipeDetail() {
                         </div>
                     </div>
 
-                    {isOwner && (
-                        <div className="detail-actions">
-                            <button className="btn-edit" onClick={() => navigate(`/editRecipe/${id}`)}>
-                                <BsPencil /> Edit
-                            </button>
-                            <button className="btn-delete" onClick={handleDelete} disabled={deleting}>
-                                <BsTrash /> {deleting ? "Deleting..." : "Delete"}
-                            </button>
-                        </div>
-                    )}
+                    <div className="detail-actions">
+                        <button className="btn-cart" onClick={() => { addToCart(recipe); showToast("Added to Cart! 🛒"); }}>
+                            <BsCartPlus /> Add to Cart
+                        </button>
+                        {isOwner && (
+                            <>
+                                <button className="btn-edit" onClick={() => navigate(`/editRecipe/${id}`)}>
+                                    <BsPencil /> Edit
+                                </button>
+                                <button className="btn-delete" onClick={handleDelete} disabled={deleting}>
+                                    <BsTrash /> {deleting ? "Deleting..." : "Delete"}
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 {recipe.coverImage ? (

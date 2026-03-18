@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react'
 import Modal from './Modal';
 import InputForm from './InputForm';
 import { NavLink, useNavigate } from "react-router-dom";
+import { CartContext } from '../context/CartContext';
+import { BsCart3 } from 'react-icons/bs';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const { cartItems } = React.useContext(CartContext);
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   // Listen for storage changes (login/logout from InputForm)
   useEffect(() => {
@@ -54,6 +58,13 @@ export default function Navbar() {
           </li>
           <li onClick={!isLoggedIn ? handleNavClick : undefined}>
             <NavLink to={isLoggedIn ? "/favRecipe" : "/"}>Favourites</NavLink>
+          </li>
+          <li onClick={!isLoggedIn ? handleNavClick : undefined}>
+            <NavLink to={isLoggedIn ? "/cart" : "/"} className="cart-nav" style={{ display: 'flex', alignItems: 'center', gap: '5px', position: 'relative' }}>
+              <BsCart3 size={18} />
+              <span className="cart-text">Cart</span>
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </NavLink>
           </li>
           <li>
             <span className="login-btn" onClick={handleAuthClick}>
