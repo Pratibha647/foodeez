@@ -10,6 +10,9 @@ import FavRecipe from './pages/FavRecipe';
 import EditRecipe from './pages/EditRecipe';
 import { CartProvider } from './context/CartContext';
 import Cart from './pages/Cart';
+import Profile from './pages/Profile';
+import EditProfile from './pages/EditProfile';
+import CategoryRecipes from './pages/CategoryRecipes';
 
 const router = createBrowserRouter([
   {
@@ -20,9 +23,13 @@ const router = createBrowserRouter([
       { path: "/addRecipe", element: <AddFoodRecipe /> },
       { path: "/recipe/:id", element: <RecipeDetail /> },
       { path: "/editRecipe/:id", element: <EditRecipe /> },
+      { path: "/category/:categoryName", element: <CategoryRecipes /> },
       { path: "/myRecipe", element: <MyRecipe /> },
       { path: "/favRecipe", element: <FavRecipe /> },
       { path: "/cart", element: <Cart /> },
+      { path: "/profile", element: <Profile /> },
+      { path: "/profile/:id", element: <Profile /> },
+      { path: "/editProfile", element: <EditProfile /> },
     ]
   }
 ]);

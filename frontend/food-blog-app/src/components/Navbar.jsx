@@ -66,6 +66,11 @@ export default function Navbar() {
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </NavLink>
           </li>
+          {isLoggedIn && (
+            <li>
+              <NavLink to="/profile">Profile</NavLink>
+            </li>
+          )}
           <li>
             <span className="login-btn" onClick={handleAuthClick}>
               {isLoggedIn ? "Logout" : "Login"}

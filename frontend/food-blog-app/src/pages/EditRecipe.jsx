@@ -102,6 +102,23 @@ export default function EditRecipe() {
                         <input type="url" className='input' name="coverImage"
                             value={recipeData.coverImage || ""} onChange={onChangeHandler} />
                     </div>
+                    <div className='form-control'>
+                        <label>Category *</label>
+                        <select
+                            className='input'
+                            name="category"
+                            value={recipeData.category || "Lunch"}
+                            onChange={onChangeHandler}
+                            required
+                        >
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Desserts">Desserts</option>
+                            <option value="Vegan">Vegan</option>
+                            <option value="Drinks">Drinks</option>
+                        </select>
+                    </div>
                     <button type='submit' className='submit-btn' disabled={saving}>
                         {saving ? "Saving..." : "Save Changes"}
                     </button>

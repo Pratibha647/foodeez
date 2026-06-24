@@ -5,7 +5,7 @@ import API_BASE from "../api";
 
 export default function AddFoodRecipe() {
     const navigate = useNavigate();
-    const [recipeData, setRecipeData] = useState({});
+    const [recipeData, setRecipeData] = useState({ category: "Lunch" });
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState(null);
 
@@ -33,11 +33,17 @@ export default function AddFoodRecipe() {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post(`${API_BASE}/recipe`, recipeData, {
+            const res = await axios.post(`${API_BASE}/recipe`, recipeData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            showToast("Recipe added successfully! 🎉");
-            setTimeout(() => navigate("/"), 1500);
+            
+            if (res.data && res.data.emailSent) {
+                showToast("Recipe submitted successfully. A confirmation email has been sent.", "success");
+            } else {
+                showToast("Recipe added, but confirmation email failed to send.", "error");
+            }
+            
+            setTimeout(() => navigate("/"), 2000);
         } catch (err) {
             showToast(err.response?.data?.message || "Failed to add recipe", "error");
             setLoading(false);
@@ -103,6 +109,23 @@ export default function AddFoodRecipe() {
                             onChange={onChangeHandler}
                         />
                         <span className="hint">Paste a direct image link, or leave blank for default</span>
+                    </div>
+                    <div className='form-control'>
+                        <label>Category *</label>
+                        <select
+                            className='input'
+                            name="category"
+                            value={recipeData.category}
+                            onChange={onChangeHandler}
+                            required
+                        >
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Desserts">Desserts</option>
+                            <option value="Vegan">Vegan</option>
+                            <option value="Drinks">Drinks</option>
+                        </select>
                     </div>
                     <button type='submit' className='submit-btn' disabled={loading}>
                         {loading ? "Adding Recipe..." : "Add Recipe 🚀"}

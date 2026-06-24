@@ -6,24 +6,18 @@ const PORT = process.env.PORT || 5000;
 const connectDB = require("./config/connectionDB");
 connectDB();
 
-// Allow requests from any Vercel frontend URL + localhost in dev
-const allowedOrigins = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    process.env.FRONTEND_URL,   // set this in Vercel dashboard once frontend is deployed
-].filter(Boolean);
-
-app.use(cors({
-    origin: function (origin, callback) {
-        // allow requests with no origin (e.g. curl, Postman, mobile apps)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app") || origin.endsWith(".onrender.com")) {
-            return callback(null, true);
-        }
-        return callback(new Error("Blocked by CORS policy. Origin not allowed."));
-    },
-    credentials: true,
-}));
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://foodeez.vercel.app",
+            process.env.FRONTEND_URL
+        ].filter(Boolean),
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        credentials: true
+    })
+);
 
 app.use(express.json());
 

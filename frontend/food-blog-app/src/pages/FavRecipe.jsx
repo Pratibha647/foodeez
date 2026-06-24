@@ -14,11 +14,29 @@ export default function FavRecipe() {
 
     useEffect(() => {
         const fetchFavourites = async () => {
-            const favIds = getFavourites();
+            const token = localStorage.getItem("token");
+            let favIds = getFavourites();
+
+            if (token) {
+                try {
+                    const profileRes = await axios.get(`${API_BASE}/profile/me`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    if (profileRes.data && profileRes.data.success) {
+                        favIds = profileRes.data.profile.favourites || [];
+                        localStorage.setItem("favourites", JSON.stringify(favIds));
+                    }
+                } catch (e) {
+                    console.error("Error syncing profile favourites", e);
+                }
+            }
+
             if (favIds.length === 0) {
+                setRecipes([]);
                 setLoading(false);
                 return;
             }
+
             try {
                 const res = await axios.get(`${API_BASE}/recipe/`);
                 const favRecipes = res.data.filter(r => favIds.includes(r._id));

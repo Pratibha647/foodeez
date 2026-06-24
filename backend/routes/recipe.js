@@ -1,12 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const { getRecipes, getRecipe, addRecipe, editRecipe, deleteRecipe } = require("../controller/recipe");
+const { 
+    getRecipes, 
+    getRecipe, 
+    addRecipe, 
+    editRecipe, 
+    deleteRecipe,
+    getTrendingRecipes,
+    getLatestRecipes,
+    getRecipesByCategory,
+    getRelatedRecipes
+} = require("../controller/recipe");
 const verifyToken = require("../middleware/auth");
 
-router.get("/", getRecipes);             // public — get all recipes
-router.get("/:id", getRecipe);           // public — get recipe by id
-router.post("/", verifyToken, addRecipe);        // protected — add recipe
-router.put("/:id", verifyToken, editRecipe);     // protected — edit recipe
-router.delete("/:id", verifyToken, deleteRecipe); // protected — delete recipe
+router.get("/", getRecipes);
+router.get("/trending", getTrendingRecipes);
+router.get("/latest", getLatestRecipes);
+router.get("/category/:category", getRecipesByCategory);
+router.get("/related/:id", getRelatedRecipes);
+router.get("/:id", getRecipe);
+router.post("/", verifyToken, addRecipe);
+router.put("/:id", verifyToken, editRecipe);
+router.delete("/:id", verifyToken, deleteRecipe);
 
 module.exports = router;
