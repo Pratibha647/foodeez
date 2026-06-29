@@ -8,6 +8,7 @@ const recipeSchema = mongoose.Schema(
         time: { type: String, },
         coverImage: { type: String, },
         userID: { type: String, required: true },
+        userId: { type: String },
         userEmail: { type: String, },
         favouritesCount: { type: Number, default: 0 },
         likesCount: { type: Number, default: 0 },

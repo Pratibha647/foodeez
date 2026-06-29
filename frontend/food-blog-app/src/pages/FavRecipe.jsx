@@ -6,43 +6,30 @@ import API_BASE from '../api'
 export default function FavRecipe() {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const getFavourites = () => {
-        try { return JSON.parse(localStorage.getItem("favourites") || "[]"); }
-        catch { return []; }
-    };
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchFavourites = async () => {
             const token = localStorage.getItem("token");
-            let favIds = getFavourites();
-
-            if (token) {
-                try {
-                    const profileRes = await axios.get(`${API_BASE}/profile/me`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    if (profileRes.data && profileRes.data.success) {
-                        favIds = profileRes.data.profile.favourites || [];
-                        localStorage.setItem("favourites", JSON.stringify(favIds));
-                    }
-                } catch (e) {
-                    console.error("Error syncing profile favourites", e);
-                }
-            }
-
-            if (favIds.length === 0) {
-                setRecipes([]);
+            if (!token) {
+                setError("Please login to view your favourites.");
                 setLoading(false);
                 return;
             }
 
             try {
-                const res = await axios.get(`${API_BASE}/recipe/`);
-                const favRecipes = res.data.filter(r => favIds.includes(r._id));
-                setRecipes(favRecipes);
+                setLoading(true);
+                setError("");
+                const res = await axios.get(`${API_BASE}/user/favourites`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setRecipes(res.data);
+                // Sync local storage favourites list with recipe IDs
+                const favIds = res.data.map(r => r._id);
+                localStorage.setItem("favourites", JSON.stringify(favIds));
             } catch (err) {
-                console.error(err);
+                console.error("Error fetching favourites", err);
+                setError(err.response?.data?.message || "Failed to load favourites.");
             } finally {
                 setLoading(false);
             }
@@ -54,6 +41,12 @@ export default function FavRecipe() {
         <div className="loading-container" style={{ marginTop: "5rem" }}>
             <div className="spinner"></div>
             <p>Loading favourites...</p>
+        </div>
+    );
+
+    if (error) return (
+        <div className="page-header" style={{ marginTop: "5rem", textAlign: "center" }}>
+            <p className="error" style={{ color: "#d9534f", fontSize: "1.2rem" }}>{error}</p>
         </div>
     );
 

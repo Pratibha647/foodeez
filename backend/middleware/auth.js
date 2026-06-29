@@ -1,11 +1,19 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
+    const authHeader = req.headers["authorization"] || req.headers["Authorization"];
+    
+    if (!authHeader) {
+        return res.status(401).json({ message: "Access denied. No token provided." });
+    }
+
+    let token = authHeader;
+    if (authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+    }
 
     if (!token) {
-        return res.status(401).json({ message: "Access denied. No token provided." });
+        return res.status(401).json({ message: "Access denied. Token is empty." });
     }
 
     try {
